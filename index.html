@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Islamic Studies — Book 3 Practice</title>
+
+<meta name="robots" content="noindex, nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="theme-color" content="#f6f4ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14181a" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Book 3">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+  :root{
+    --bg:#f6f4ee; --card:#ffffff; --ink:#1d2321; --muted:#6b7671;
+    --line:#e3e0d6; --accent:#0f766e; --accent-soft:#e6f2f0;
+    --good:#15803d; --good-soft:#e8f5ec; --bad:#b91c1c; --bad-soft:#fdecec;
+    --gold:#b58900;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#14181a; --card:#1c2225; --ink:#eef1ef; --muted:#98a5a1;
+      --line:#2c3438; --accent:#4db6ac; --accent-soft:#1d2f2d;
+      --good:#4ade80; --good-soft:#16281c; --bad:#f87171; --bad-soft:#2c1a1a;
+      --gold:#d9a441;
+    }
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg); color:var(--ink); min-height:100vh;
+    font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex; flex-direction:column; align-items:center;
+    padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right))
+            calc(48px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));
+  }
+  button{touch-action:manipulation; -webkit-user-select:none; user-select:none}
+  .wrap{width:100%; max-width:680px}
+
+  header{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:14px}
+  h1{font-size:19px; margin:0; font-weight:650; letter-spacing:-.01em}
+  .pill{
+    font-size:12px; font-weight:650; padding:3px 10px; border-radius:999px;
+    background:var(--accent-soft); color:var(--accent); letter-spacing:.02em;
+  }
+  .spacer{flex:1}
+  .count{font-size:13px; color:var(--muted); font-variant-numeric:tabular-nums}
+
+  .bar{height:8px; background:var(--line); border-radius:99px; overflow:hidden; margin-bottom:22px}
+  .bar > i{display:block; height:100%; width:0; background:var(--accent); border-radius:99px;
+           transition:width .45s cubic-bezier(.2,.7,.3,1)}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:26px 24px; box-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.035);
+  }
+  .qmeta{display:flex; align-items:center; gap:8px; margin-bottom:12px; min-height:20px}
+  .tag{font-size:11.5px; font-weight:650; padding:2px 9px; border-radius:999px; letter-spacing:.03em; text-transform:uppercase}
+  .tag.retry{background:var(--bad-soft); color:var(--bad)}
+  .tag.streak{background:var(--good-soft); color:var(--good)}
+  .q{font-size:21px; line-height:1.4; font-weight:600; margin:0 0 20px; letter-spacing:-.01em}
+
+  .opts{display:flex; flex-direction:column; gap:9px}
+  .opt{
+    display:flex; align-items:flex-start; gap:13px; width:100%; text-align:left;
+    padding:14px 15px; border:1.5px solid var(--line); border-radius:11px;
+    background:transparent; color:inherit; font:inherit; cursor:pointer;
+    transition:border-color .12s, background .12s, transform .06s;
+  }
+  .opt:hover:not(:disabled){border-color:var(--accent); background:var(--accent-soft)}
+  .opt:active:not(:disabled){transform:scale(.994)}
+  .opt:disabled{cursor:default}
+  .key{
+    flex:none; width:25px; height:25px; border-radius:7px; background:var(--line);
+    display:grid; place-items:center; font-size:12.5px; font-weight:700; color:var(--muted);
+  }
+  .opt.correct{border-color:var(--good); background:var(--good-soft)}
+  .opt.correct .key{background:var(--good); color:#fff}
+  .opt.wrong{border-color:var(--bad); background:var(--bad-soft)}
+  .opt.wrong .key{background:var(--bad); color:#fff}
+  .opt.dim{opacity:.42}
+
+  .feedback{margin-top:18px; display:none; align-items:center; gap:12px}
+  .feedback.on{display:flex}
+  .fmsg{font-size:14.5px; font-weight:600}
+  .fmsg.good{color:var(--good)} .fmsg.bad{color:var(--bad)}
+  .next{
+    margin-left:auto; padding:10px 20px; border:0; border-radius:9px;
+    background:var(--accent); color:#fff; font:inherit; font-weight:650; font-size:14.5px; cursor:pointer;
+  }
+  .next:hover{filter:brightness(1.08)}
+
+  /* summary */
+  .done{text-align:center; padding:34px 24px}
+  .star{font-size:46px; line-height:1; margin-bottom:10px}
+  .done h2{margin:0 0 6px; font-size:24px; letter-spacing:-.02em}
+  .done p{margin:0 0 24px; color:var(--muted); font-size:15px}
+  .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:22px}
+  .stat{background:var(--bg); border:1px solid var(--line); border-radius:11px; padding:13px 8px}
+  .stat b{display:block; font-size:23px; font-weight:680; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+  .stat span{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
+  .tricky{text-align:left; margin-bottom:22px}
+  .tricky h3{font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:0 0 8px}
+  .tricky ol{margin:0; padding-left:20px; font-size:14px; color:var(--ink)}
+  .tricky li{margin-bottom:5px}
+  .tricky em{color:var(--muted); font-style:normal}
+  .btn{
+    padding:13px 26px; border:0; border-radius:10px; background:var(--accent); color:#fff;
+    font:inherit; font-weight:650; font-size:15.5px; cursor:pointer;
+  }
+  .btn:hover{filter:brightness(1.08)}
+
+  .hist{margin-top:26px; font-size:13px}
+  .hist h3{font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:0 0 8px}
+  table{width:100%; border-collapse:collapse}
+  th,td{text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums}
+  th{font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600}
+
+  footer{margin-top:26px; display:flex; gap:14px; align-items:center; font-size:12px; color:var(--muted)}
+  .link{background:none; border:0; color:var(--muted); font:inherit; text-decoration:underline; cursor:pointer; padding:0}
+  .link:hover{color:var(--bad)}
+  .hint{margin-left:auto}
+  @media (max-width:520px){ .hint{display:none} .q{font-size:19px} }
+
+  canvas#confetti{position:fixed; inset:0; pointer-events:none; z-index:9}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Islamic Studies — Book 3</h1>
+    <span class="pill" id="attemptPill">Attempt 1</span>
+    <span class="spacer"></span>
+    <span class="count" id="count"></span>
+  </header>
+
+  <div class="bar"><i id="barFill"></i></div>
+
+  <div id="app"></div>
+
+  <footer>
+    <button class="link" id="wipe">Reset all progress</button>
+    <span class="hint">Keys 1–4 to answer · Enter for next</span>
+  </footer>
+</div>
+
+<canvas id="confetti"></canvas>
+
+<script src="questions.js"></script>
+<script>
+(function(){
+  "use strict";
+  const KEY = "islamic-quiz-book3-v1";
+  const N = QUESTIONS.length;
+  const app = document.getElementById("app");
+  const barFill = document.getElementById("barFill");
+  const countEl = document.getElementById("count");
+  const attemptPill = document.getElementById("attemptPill");
+
+  /* ---------- state ---------- */
+  function freshAttempt(attempt, history){
+    return {
+      attempt: attempt,
+      st: Array.from({length:N}, () => ({ wrong:false, streak:0, mastered:false, misses:0 })),
+      queue: shuffle(Array.from({length:N}, (_,i) => i)),
+      answers: 0,
+      firstTry: 0,
+      started: Date.now(),
+      history: history || []
+    };
+  }
+  let S = load() || freshAttempt(1, []);
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return null;
+      const s = JSON.parse(raw);
+      // guard against the question list changing under a saved attempt
+      if(!s.st || s.st.length !== N) return freshAttempt(1, s.history || []);
+      return s;
+    }catch(e){ return null; }
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+  /* ---------- helpers ---------- */
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  const masteredCount = () => S.st.filter(x => x.mastered).length;
+  // never wrong -> 1 correct retires it. Once wrong -> 2 correct IN A ROW.
+  const needed = i => S.st[i].wrong ? 2 : 1;
+
+  function fmtTime(ms){
+    const s = Math.round(ms / 1000);
+    return s < 60 ? s + "s" : Math.floor(s/60) + "m " + String(s%60).padStart(2,"0") + "s";
+  }
+
+  function chrome(){
+    const m = masteredCount();
+    barFill.style.width = (m / N * 100) + "%";
+    countEl.textContent = m + " of " + N + " mastered";
+    attemptPill.textContent = "Attempt " + S.attempt;
+  }
+
+  /* ---------- question screen ---------- */
+  let locked = false, currentOrder = null, currentIdx = null;
+
+  function render(){
+    chrome();
+    if(S.queue.length === 0){ save(); return renderDone(); }
+
+    const qi = S.queue[0];
+    const Q = QUESTIONS[qi];
+    const st = S.st[qi];
+    currentIdx = qi;
+
+    // juggle the options every single time the question is shown
+    currentOrder = shuffle(Array.from({length:Q.opts.length}, (_,i) => i));
+
+    let meta = "";
+    if(st.wrong && st.streak === 0) meta = '<span class="tag retry">Try again</span>';
+    else if(st.wrong && st.streak === 1) meta = '<span class="tag streak">1 in a row · 1 more to master</span>';
+
+    app.innerHTML =
+      '<div class="card">' +
+        '<div class="qmeta">' + meta + '</div>' +
+        '<p class="q">' + Q.q + '</p>' +
+        '<div class="opts" id="opts">' +
+          currentOrder.map(function(oi, pos){
+            return '<button class="opt" data-oi="' + oi + '">' +
+                     '<span class="key">' + "ABCD"[pos] + '</span>' +
+                     '<span>' + Q.opts[oi] + '</span>' +
+                   '</button>';
+          }).join("") +
+        '</div>' +
+        '<div class="feedback" id="fb">' +
+          '<span class="fmsg" id="fmsg"></span>' +
+          '<button class="next" id="next">Next</button>' +
+        '</div>' +
+      '</div>';
+
+    locked = false;
+    Array.prototype.forEach.call(document.querySelectorAll(".opt"), function(b){
+      b.addEventListener("click", function(){ answer(parseInt(b.dataset.oi,10)); });
+    });
+  }
+
+  function answer(chosen){
+    if(locked) return;
+    locked = true;
+
+    const qi = currentIdx, Q = QUESTIONS[qi], st = S.st[qi];
+    const right = chosen === Q.a;
+    const firstAttempt = !st.wrong && st.streak === 0;
+
+    S.answers++;
+    if(right && firstAttempt) S.firstTry++;
+
+    // paint
+    const btns = document.querySelectorAll(".opt");
+    Array.prototype.forEach.call(btns, function(b){
+      const oi = parseInt(b.dataset.oi, 10);
+      b.disabled = true;
+      if(oi === Q.a) b.classList.add("correct");
+      else if(oi === chosen) b.classList.add("wrong");
+      else b.classList.add("dim");
+    });
+
+    if(right){
+      st.streak++;
+      if(st.streak >= needed(qi)){
+        st.mastered = true;
+        S.queue.shift();
+      }else{
+        // needs another one in a row — send it back down the queue
+        requeue();
+      }
+    }else{
+      st.wrong = true;
+      st.misses++;
+      st.streak = 0;
+      requeue();
+    }
+    save();
+    chrome();
+
+    const fb = document.getElementById("fb");
+    const fmsg = document.getElementById("fmsg");
+    fb.classList.add("on");
+
+    if(right){
+      fmsg.className = "fmsg good";
+      fmsg.textContent = st.mastered
+        ? "Correct — mastered."
+        : "Correct. Get it right once more in a row to master it.";
+      document.getElementById("next").style.display = "none";
+      setTimeout(function(){ if(locked) render(); }, 850);
+    }else{
+      fmsg.className = "fmsg bad";
+      fmsg.textContent = "Not quite. You'll see this one again.";
+      const nx = document.getElementById("next");
+      nx.textContent = "Got it";
+      nx.addEventListener("click", render);
+      nx.focus();
+    }
+  }
+
+  // put the current question back a few places so the "in a row" means something
+  function requeue(){
+    const qi = S.queue.shift();
+    const pos = Math.min(S.queue.length, 3 + Math.floor(Math.random() * 3));
+    S.queue.splice(pos, 0, qi);
+  }
+
+  /* ---------- summary ---------- */
+  function renderDone(){
+    const ms = Date.now() - S.started;
+    const tricky = S.st
+      .map(function(x, i){ return { i:i, m:x.misses }; })
+      .filter(function(x){ return x.m > 0; })
+      .sort(function(a,b){ return b.m - a.m; });
+
+    // record this attempt once
+    if(!S.recorded){
+      S.history.push({
+        attempt: S.attempt, firstTry: S.firstTry, total: N,
+        answers: S.answers, ms: ms, date: new Date().toISOString().slice(0,10)
+      });
+      S.recorded = true;
+      save();
+    }
+
+    app.innerHTML =
+      '<div class="card done">' +
+        '<div class="star">' + (S.firstTry === N ? "🏆" : "⭐️") + '</div>' +
+        '<h2>Attempt ' + S.attempt + ' complete</h2>' +
+        '<p>All ' + N + ' questions mastered.</p>' +
+        '<div class="stats">' +
+          '<div class="stat"><b>' + S.firstTry + '/' + N + '</b><span>Right first go</span></div>' +
+          '<div class="stat"><b>' + S.answers + '</b><span>Answers given</span></div>' +
+          '<div class="stat"><b>' + fmtTime(ms) + '</b><span>Time</span></div>' +
+        '</div>' +
+        (tricky.length
+          ? '<div class="tricky"><h3>Worth another look</h3><ol>' +
+            tricky.slice(0,8).map(function(t){
+              return '<li>' + QUESTIONS[t.i].q +
+                     ' <em>&mdash; ' + QUESTIONS[t.i].opts[QUESTIONS[t.i].a] + '</em></li>';
+            }).join("") +
+            '</ol></div>'
+          : '<div class="tricky"><h3>Worth another look</h3><ol><li>Nothing — clean sweep.</li></ol></div>') +
+        '<button class="btn" id="again">Start attempt ' + (S.attempt + 1) + '</button>' +
+        renderHistory() +
+      '</div>';
+
+    document.getElementById("again").addEventListener("click", function(){
+      S = freshAttempt(S.attempt + 1, S.history);
+      save(); render();
+    });
+
+    if(S.firstTry >= N * 0.8) confetti();
+  }
+
+  function renderHistory(){
+    if(!S.history.length) return "";
+    return '<div class="hist"><h3>Previous attempts</h3><table>' +
+      '<tr><th>Attempt</th><th>Right first go</th><th>Answers</th><th>Time</th><th>Date</th></tr>' +
+      S.history.slice().reverse().map(function(h){
+        return '<tr><td>' + h.attempt + '</td><td>' + h.firstTry + '/' + h.total + '</td>' +
+               '<td>' + h.answers + '</td><td>' + fmtTime(h.ms) + '</td><td>' + h.date + '</td></tr>';
+      }).join("") +
+      '</table></div>';
+  }
+
+  /* ---------- keyboard ---------- */
+  document.addEventListener("keydown", function(e){
+    if(e.key >= "1" && e.key <= "4"){
+      const btns = document.querySelectorAll(".opt");
+      const b = btns[parseInt(e.key,10) - 1];
+      if(b && !b.disabled) b.click();
+    }else if(e.key === "Enter" || e.key === " "){
+      const nx = document.getElementById("next");
+      if(nx && nx.style.display !== "none"){ e.preventDefault(); nx.click(); }
+    }
+  });
+
+  /* ---------- reset ---------- */
+  document.getElementById("wipe").addEventListener("click", function(){
+    if(!confirm("Wipe all progress and attempt history? This cannot be undone.")) return;
+    localStorage.removeItem(KEY);
+    S = freshAttempt(1, []);
+    render();
+  });
+
+  /* ---------- confetti ---------- */
+  function confetti(){
+    const c = document.getElementById("confetti"), x = c.getContext("2d");
+    c.width = innerWidth; c.height = innerHeight;
+    const cols = ["#0f766e","#b58900","#15803d","#4db6ac","#d9a441"];
+    const bits = Array.from({length:120}, function(){
+      return { x:Math.random()*c.width, y:-20-Math.random()*c.height*.5,
+               r:4+Math.random()*5, vy:2+Math.random()*3, vx:-1+Math.random()*2,
+               a:Math.random()*6.3, col:cols[Math.floor(Math.random()*cols.length)] };
+    });
+    let frames = 0;
+    (function loop(){
+      x.clearRect(0,0,c.width,c.height);
+      bits.forEach(function(b){
+        b.y += b.vy; b.x += b.vx; b.a += .1;
+        x.save(); x.translate(b.x,b.y); x.rotate(b.a);
+        x.fillStyle = b.col; x.fillRect(-b.r/2,-b.r/2,b.r,b.r*.6); x.restore();
+      });
+      if(++frames < 220) requestAnimationFrame(loop); else x.clearRect(0,0,c.width,c.height);
+    })();
+  }
+
+  render();
+
+  // offline support once installed to a home screen (no-op when opened via file://)
+  if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){});
+    });
+  }
+})();
+</script>
+</body>
+</html>

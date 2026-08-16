@@ -1,0 +1,16 @@
+{
+  "name": "Islamic Studies — Book 3 Practice",
+  "short_name": "Book 3",
+  "description": "Multiple-choice practice for the Book 3 madressa test, with mastery-based repetition.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f4ee",
+  "theme_color": "#0f5b55",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "./icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
